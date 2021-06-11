@@ -6,10 +6,10 @@ import lombok.Data;
 @Data
 public class MessageDto {
     @NotNull
-    private String content;
+    private String message;
 
     @NotNull
-    private String sender;
+    private String author;
 
     @NotNull
     private String receiver;
