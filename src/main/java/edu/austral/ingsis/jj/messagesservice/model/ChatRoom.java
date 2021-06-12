@@ -1,27 +1,25 @@
 package edu.austral.ingsis.jj.messagesservice.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
-@Table(name = "message")
-public class Message {
+public class ChatRoom {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid")
     @Column(name = "id")
     private String id;
-
-    private String content;
-    private LocalDateTime time;
-    private String sender;
-    private String receiver;
+    private String chatId;
+    private String senderId;
+    private String recipientId;
 }
