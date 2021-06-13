@@ -29,6 +29,11 @@ public class ChatMessageService {
         return chatMessage;
     }
 
+    public long countNewMessages(String senderId, String recipientId) {
+        return chatMessageRepository.countBySenderIdAndRecipientIdAndStatus(
+                senderId, recipientId, MessageStatus.RECEIVED);
+    }
+
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
         var chatId = chatRoomService.getChatId(senderId, recipientId, false);
 

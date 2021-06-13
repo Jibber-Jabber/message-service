@@ -4,7 +4,6 @@ import edu.austral.ingsis.jj.messagesservice.model.ChatMessage;
 import edu.austral.ingsis.jj.messagesservice.model.ChatNotification;
 import edu.austral.ingsis.jj.messagesservice.service.ChatMessageService;
 import edu.austral.ingsis.jj.messagesservice.service.ChatRoomService;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -35,6 +34,22 @@ public class MessagesController {
                         saved.getId(),
                         saved.getSenderId(),
                         saved.getSenderName()));
+    }
+
+    @GetMapping("/api/messages/{senderId}/{recipientId}/count")
+    public ResponseEntity<Long> countNewMessages(
+            @PathVariable String senderId,
+            @PathVariable String recipientId) {
+
+        return ResponseEntity
+                .ok(chatMessageService.countNewMessages(senderId, recipientId));
+    }
+
+    @GetMapping("/api/messages/{senderId}/{recipientId}")
+    public ResponseEntity<?> findChatMessages ( @PathVariable String senderId,
+                                                @PathVariable String recipientId) {
+        return ResponseEntity
+                .ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
 
     @GetMapping("/api/messages/{id}")
