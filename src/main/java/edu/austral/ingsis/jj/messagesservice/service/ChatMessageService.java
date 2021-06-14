@@ -4,7 +4,6 @@ import edu.austral.ingsis.jj.messagesservice.exceptions.ResourceNotFoundExceptio
 import edu.austral.ingsis.jj.messagesservice.model.ChatMessage;
 import edu.austral.ingsis.jj.messagesservice.model.MessageStatus;
 import edu.austral.ingsis.jj.messagesservice.repository.ChatMessageRepository;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +34,7 @@ public class ChatMessageService {
     }
 
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
-        var chatId = chatRoomService.getChatId(senderId, recipientId, false);
+        var chatId = chatRoomService.findChatIdBySenderAndRecipient(senderId, recipientId);
 
         var messages =
                 chatId.map(cId -> chatMessageRepository.findByChatId(cId)).orElse(new ArrayList<>());
