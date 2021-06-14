@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class ChatInfoDto {
 
-    private String UserId;
+    private String userId;
     private String userName;
     private long unreadCount;
 }
