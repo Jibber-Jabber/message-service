@@ -1,8 +1,10 @@
 package edu.austral.ingsis.jj.messagesservice.service;
 
-import edu.austral.ingsis.jj.messagesservice.dto.UserDto;
+import edu.austral.ingsis.jj.messagesservice.dto.ChatInfoDto;
 import edu.austral.ingsis.jj.messagesservice.model.ChatMessage;
 import edu.austral.ingsis.jj.messagesservice.model.ChatRoom;
+import edu.austral.ingsis.jj.messagesservice.model.MessageStatus;
+import edu.austral.ingsis.jj.messagesservice.repository.ChatMessageRepository;
 import edu.austral.ingsis.jj.messagesservice.repository.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,12 @@ import java.util.stream.Collectors;
 public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     @Autowired
-    public ChatRoomService(ChatRoomRepository chatRoomRepository) {
+    public ChatRoomService(ChatRoomRepository chatRoomRepository, ChatMessageRepository chatMessageRepository) {
         this.chatRoomRepository = chatRoomRepository;
+        this.chatMessageRepository = chatMessageRepository;
     }
 
     public Optional<String> getChatId(ChatMessage chatMessage, boolean createIfNotExist) {
@@ -62,8 +66,11 @@ public class ChatRoomService {
                 .map(ChatRoom::getChatId);
     }
 
-    public List<UserDto> findAllRecipientsBySenderId(String senderId) {
+    public List<ChatInfoDto> findAllRecipientsBySenderId(String senderId) {
         return chatRoomRepository.findAllBySenderId(senderId).stream()
-                .map(chat -> new UserDto(chat.getRecipientId(), chat.getRecipientName())).collect(Collectors.toList());
+                .map(chat -> new ChatInfoDto(chat.getRecipientId(),
+                        chat.getRecipientName(),
+                        chatMessageRepository.countBySenderIdAndRecipientIdAndStatus(senderId, chat.getRecipientId(), MessageStatus.RECEIVED)))
+        .collect(Collectors.toList());
     }
 }

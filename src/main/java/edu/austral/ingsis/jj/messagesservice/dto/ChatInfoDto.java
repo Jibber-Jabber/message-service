@@ -5,8 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserDto {
+public class ChatInfoDto {
 
     private String UserId;
     private String userName;
+    private long unreadCount;
 }

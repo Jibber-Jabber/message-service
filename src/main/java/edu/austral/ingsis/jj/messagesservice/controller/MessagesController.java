@@ -1,6 +1,6 @@
 package edu.austral.ingsis.jj.messagesservice.controller;
 
-import edu.austral.ingsis.jj.messagesservice.dto.UserDto;
+import edu.austral.ingsis.jj.messagesservice.dto.ChatInfoDto;
 import edu.austral.ingsis.jj.messagesservice.model.ChatMessage;
 import edu.austral.ingsis.jj.messagesservice.model.ChatNotification;
 import edu.austral.ingsis.jj.messagesservice.service.ChatMessageService;
@@ -59,7 +59,7 @@ public class MessagesController {
     }
 
     @GetMapping("/api/chats/{senderId}")
-    public ResponseEntity<List<UserDto>> findChatsRecipientsBySenderId (@PathVariable String senderId) {
+    public ResponseEntity<List<ChatInfoDto>> findChatsRecipientsBySenderId (@PathVariable String senderId) {
         return ResponseEntity.ok(chatRoomService.findAllRecipientsBySenderId(senderId));
     }
 }
