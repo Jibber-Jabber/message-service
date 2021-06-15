@@ -70,7 +70,8 @@ public class ChatRoomService {
         return chatRoomRepository.findAllBySenderId(senderId).stream()
                 .map(chat -> new ChatInfoDto(chat.getRecipientId(),
                         chat.getRecipientName(),
-                        chatMessageRepository.countBySenderIdAndRecipientIdAndStatus(senderId, chat.getRecipientId(), MessageStatus.RECEIVED)))
+                        chat.getChatId(),
+                        chatMessageRepository.countBySenderIdAndRecipientIdAndStatus(chat.getRecipientId(), senderId, MessageStatus.RECEIVED)))
         .collect(Collectors.toList());
     }
 }

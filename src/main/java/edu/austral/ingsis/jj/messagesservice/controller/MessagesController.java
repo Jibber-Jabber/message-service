@@ -36,7 +36,9 @@ public class MessagesController {
                 new ChatNotification(
                         saved.getId(),
                         saved.getSenderId(),
-                        saved.getSenderName()));
+                        saved.getSenderName(),
+                        chatId.get(),
+                        chatMessageService.countNewMessages(saved.getSenderId(), chatMessage.getRecipientId())));
     }
 
     @GetMapping("/api/messages/{senderId}/{recipientId}/count")

@@ -37,10 +37,13 @@ public class ChatMessageService {
         var chatId = chatRoomService.findChatIdBySenderAndRecipient(senderId, recipientId);
 
         var messages =
-                chatId.map(cId -> chatMessageRepository.findByChatId(cId)).orElse(new ArrayList<>());
+                chatId.map(cId -> chatMessageRepository.findByChatIdAndSenderId(cId, recipientId)).orElse(new ArrayList<>());
 
         if(messages.size() > 0) {
-            chatMessageRepository.updateStatuses(senderId, recipientId, MessageStatus.DELIVERED);
+            messages.forEach(message -> {
+                message.setStatus(MessageStatus.DELIVERED);
+                chatMessageRepository.save(message);
+            });
         }
 
         return messages;

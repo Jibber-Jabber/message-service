@@ -9,5 +9,6 @@ public class ChatInfoDto {
 
     private String userId;
     private String userName;
+    private String chatId;
     private long unreadCount;
 }
