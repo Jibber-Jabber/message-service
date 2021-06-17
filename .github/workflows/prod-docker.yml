@@ -11,7 +11,7 @@ on:
 
 #Enviroment variables that you can use in the steps
 env:
-  IMAGE_NAME: message-service-prod
+  IMAGE_NAME: message-service
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
