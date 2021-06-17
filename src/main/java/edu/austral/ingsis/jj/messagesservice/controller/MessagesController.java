@@ -19,7 +19,6 @@ import java.util.List;
 
 
 @Controller
-@CrossOrigin(origins = "*")
 public class MessagesController {
 
     @Autowired private SimpMessagingTemplate messagingTemplate;
