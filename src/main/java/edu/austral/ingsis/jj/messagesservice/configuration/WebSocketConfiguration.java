@@ -38,8 +38,8 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").withSockJS()
-                .setInterceptors(httpSessionHandshakeInterceptor());
+        registry.addEndpoint("/ws").withSockJS();
+//                .setInterceptors(httpSessionHandshakeInterceptor());
     }
 
     @Override
@@ -48,41 +48,41 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         brokerRegistry.setApplicationDestinationPrefixes("/app");
         brokerRegistry.setUserDestinationPrefix("/user");
     }
-    @Bean
-    public HandshakeInterceptor httpSessionHandshakeInterceptor() {
-        return new HandshakeInterceptor() {
-            @Override
-            public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws URISyntaxException {
-                if (request instanceof ServletServerHttpRequest) {
-                    ServletServerHttpRequest servletServerRequest = (ServletServerHttpRequest) request;
-                    HttpServletRequest servletRequest = servletServerRequest.getServletRequest();
-                    Cookie token = WebUtils.getCookie(servletRequest, "jwt");
-                    if (token != null && sendUserServiceRequest(token.getValue()))
-                        attributes.put("token", token.getValue());
-                    else response.setStatusCode(HttpStatus.BAD_REQUEST);
-                }
-                return true;
-            }
-            @Override
-            public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
-            }
-        };
-    }
-
-    private boolean sendUserServiceRequest(String jwt) throws URISyntaxException {
-        RestTemplate restTemplate = new RestTemplate();
-
-        final String getUserUrl = "http://" + authHost + ":" + authPort + "/api/users/authenticateUser";
-        logger.info("Authenticating with: http://" + authHost + ":" + authPort + "/api/users/authenticateUser");
-
-        URI getUserUri = new URI(getUserUrl);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Cookie", "jwt="+jwt);
-        HttpEntity<String> httpEntity = new HttpEntity<>(headers);
-
-        ResponseEntity<Object> response = restTemplate.exchange(getUserUri, HttpMethod.GET, httpEntity, Object.class);
-        return response.getStatusCodeValue() == 200;
-    }
+//    @Bean
+//    public HandshakeInterceptor httpSessionHandshakeInterceptor() {
+//        return new HandshakeInterceptor() {
+//            @Override
+//            public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws URISyntaxException {
+//                if (request instanceof ServletServerHttpRequest) {
+//                    ServletServerHttpRequest servletServerRequest = (ServletServerHttpRequest) request;
+//                    HttpServletRequest servletRequest = servletServerRequest.getServletRequest();
+//                    Cookie token = WebUtils.getCookie(servletRequest, "jwt");
+//                    if (token != null && sendUserServiceRequest(token.getValue()))
+//                        attributes.put("token", token.getValue());
+//                    else response.setStatusCode(HttpStatus.BAD_REQUEST);
+//                }
+//                return true;
+//            }
+//            @Override
+//            public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
+//            }
+//        };
+//    }
+//
+//    private boolean sendUserServiceRequest(String jwt) throws URISyntaxException {
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        final String getUserUrl = "http://" + authHost + ":" + authPort + "/api/users/authenticateUser";
+//        logger.info("Authenticating with: http://" + authHost + ":" + authPort + "/api/users/authenticateUser");
+//
+//        URI getUserUri = new URI(getUserUrl);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Cookie", "jwt="+jwt);
+//        HttpEntity<String> httpEntity = new HttpEntity<>(headers);
+//
+//        ResponseEntity<Object> response = restTemplate.exchange(getUserUri, HttpMethod.GET, httpEntity, Object.class);
+//        return response.getStatusCodeValue() == 200;
+//    }
 
 }
