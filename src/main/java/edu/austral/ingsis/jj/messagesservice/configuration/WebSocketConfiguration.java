@@ -1,5 +1,7 @@
 package edu.austral.ingsis.jj.messagesservice.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +33,8 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Value("${AUTH_PORT}")
     private String authPort;
+
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketConfiguration.class);
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -69,6 +73,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         RestTemplate restTemplate = new RestTemplate();
 
         final String getUserUrl = "http://" + authHost + ":" + authPort + "/api/users/authenticateUser";
+        logger.info("Authenticating with: http://" + authHost + ":" + authPort + "/api/users/authenticateUser");
 
         URI getUserUri = new URI(getUserUrl);
 
