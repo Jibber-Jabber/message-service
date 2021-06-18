@@ -82,7 +82,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         HttpEntity<String> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<Object> response = restTemplate.exchange(getUserUri, HttpMethod.GET, httpEntity, Object.class);
-        return response.getStatusCodeValue() != 200;
+        return response.getStatusCodeValue() == 200;
     }
 
 }
