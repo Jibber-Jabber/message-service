@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 
@@ -20,9 +21,14 @@ import java.util.List;
 @Controller
 public class MessagesController {
 
-    @Autowired private SimpMessagingTemplate messagingTemplate;
-    @Autowired private ChatMessageService chatMessageService;
-    @Autowired private ChatRoomService chatRoomService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private ChatMessageService chatMessageService;
+
+    @Autowired
+    private ChatRoomService chatRoomService;
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage) {
@@ -35,6 +41,7 @@ public class MessagesController {
                 chatMessage.getRecipientId(),"/queue/messages",
                 new ChatNotification(
                         saved.getId(),
+                        saved.getContent(),
                         saved.getSenderId(),
                         saved.getSenderName(),
                         chatId.get(),
@@ -55,9 +62,9 @@ public class MessagesController {
         return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
 
-    @GetMapping("/api/messages/{id}")
-    public ResponseEntity<ChatMessage> findMessage (@PathVariable String id) {
-        return ResponseEntity.ok(chatMessageService.findById(id));
+    @PutMapping("/api/readMessage/{id}")
+    public void readMessage (@PathVariable String id) {
+        chatMessageService.readMessageById(id);
     }
 
     @GetMapping("/api/chats/{senderId}")

@@ -8,13 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class ChatMessageService {
 
-    @Autowired private ChatMessageRepository chatMessageRepository;
-    @Autowired private ChatRoomService chatRoomService;
+    @Autowired
+    private final ChatMessageRepository chatMessageRepository;
+
+    @Autowired
+    private final ChatRoomService chatRoomService;
 
     @Autowired
     public ChatMessageService(ChatMessageRepository chatMessageRepository, ChatRoomService chatRoomService) {
@@ -36,8 +40,7 @@ public class ChatMessageService {
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
         var chatId = chatRoomService.findChatIdBySenderAndRecipient(senderId, recipientId);
 
-        var messages =
-                chatId.map(cId -> chatMessageRepository.findByChatIdAndSenderId(cId, recipientId)).orElse(new ArrayList<>());
+        var messages = chatId.map(cId -> chatMessageRepository.findByChatId(cId)).orElse(new ArrayList<>());
 
         if(messages.size() > 0) {
             messages.forEach(message -> {
@@ -46,17 +49,14 @@ public class ChatMessageService {
             });
         }
 
+        messages.sort(Comparator.comparing(ChatMessage::getTimestamp));
+
         return messages;
     }
 
-    public ChatMessage findById(String id) {
-        return chatMessageRepository
-                .findById(id)
-                .map(chatMessage -> {
-                    chatMessage.setStatus(MessageStatus.DELIVERED);
-                    return chatMessageRepository.save(chatMessage);
-                })
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("can't find message (" + id + ")"));
+    public void readMessageById(String id) {
+        ChatMessage message = chatMessageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("can't find message (" + id + ")"));
+        message.setStatus(MessageStatus.DELIVERED);
+        chatMessageRepository.save(message);
     }
 }
