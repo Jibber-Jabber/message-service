@@ -13,8 +13,11 @@ import java.util.List;
 @Service
 public class ChatMessageService {
 
-    @Autowired private ChatMessageRepository chatMessageRepository;
-    @Autowired private ChatRoomService chatRoomService;
+    @Autowired
+    private final ChatMessageRepository chatMessageRepository;
+
+    @Autowired
+    private final ChatRoomService chatRoomService;
 
     @Autowired
     public ChatMessageService(ChatMessageRepository chatMessageRepository, ChatRoomService chatRoomService) {
@@ -35,12 +38,8 @@ public class ChatMessageService {
 
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
         var chatId = chatRoomService.findChatIdBySenderAndRecipient(senderId, recipientId);
-        var chatId2 = chatRoomService.findChatIdBySenderAndRecipient(recipientId, senderId);
 
-        var messages = chatId.map(cId -> chatMessageRepository.findByChatIdAndSenderIdOrChatIdAndRecipientId(cId, senderId, cId, recipientId)).orElse(new ArrayList<>());
-        var messages2 = chatId2.map(cId -> chatMessageRepository.findByChatIdAndSenderIdOrChatIdAndRecipientId(cId, senderId, cId, recipientId)).orElse(new ArrayList<>());
-
-        messages.addAll(messages2);
+        var messages = chatId.map(cId -> chatMessageRepository.findByChatId(cId)).orElse(new ArrayList<>());
 
         if(messages.size() > 0) {
             messages.forEach(message -> {
