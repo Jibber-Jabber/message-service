@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -47,6 +48,8 @@ public class ChatMessageService {
                 chatMessageRepository.save(message);
             });
         }
+
+        messages.sort(Comparator.comparing(ChatMessage::getTimestamp));
 
         return messages;
     }
