@@ -36,8 +36,7 @@ public class ChatMessageService {
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
         var chatId = chatRoomService.findChatIdBySenderAndRecipient(senderId, recipientId);
 
-        var messages =
-                chatId.map(cId -> chatMessageRepository.findByChatIdAndSenderId(cId, recipientId)).orElse(new ArrayList<>());
+        var messages = chatId.map(cId -> chatMessageRepository.findByChatIdAndSenderIdOrChatIdAndRecipientId(cId, senderId, cId, recipientId)).orElse(new ArrayList<>());
 
         if(messages.size() > 0) {
             messages.forEach(message -> {

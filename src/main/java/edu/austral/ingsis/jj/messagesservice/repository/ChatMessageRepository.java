@@ -9,7 +9,8 @@ import java.util.List;
 
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, String> {
-    List<ChatMessage> findByChatIdAndSenderId(String chatId, String senderId);
+    // (A and B) or (A and C)
+    List<ChatMessage> findByChatIdAndSenderIdOrChatIdAndRecipientId(String chatId, String senderId, String chatId2, String recipientId);
 
     long countBySenderIdAndRecipientIdAndStatus(
             String senderId, String recipientId, MessageStatus status);
