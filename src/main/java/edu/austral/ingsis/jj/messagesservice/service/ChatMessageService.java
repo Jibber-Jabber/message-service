@@ -51,14 +51,9 @@ public class ChatMessageService {
         return messages;
     }
 
-    public ChatMessage findById(String id) {
-        return chatMessageRepository
-                .findById(id)
-                .map(chatMessage -> {
-                    chatMessage.setStatus(MessageStatus.DELIVERED);
-                    return chatMessageRepository.save(chatMessage);
-                })
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("can't find message (" + id + ")"));
+    public void readMessageById(String id) {
+        ChatMessage message = chatMessageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("can't find message (" + id + ")"));
+        message.setStatus(MessageStatus.DELIVERED);
+        chatMessageRepository.save(message);
     }
 }

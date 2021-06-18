@@ -18,6 +18,7 @@ public class ChatNotification {
     @GenericGenerator(name = "uuid", strategy = "uuid")
     @Column(name = "id")
     private String id;
+    private String content;
     private String senderId;
     private String senderName;
     private String chatId;
